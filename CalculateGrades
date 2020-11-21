@@ -1,0 +1,83 @@
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.Scanner;
+
+public class CalculateGrades {
+    //enter grades as percentages
+    public static void enterGrades() {
+        Scanner scan = new Scanner(System.in);
+        System.out.println("\nEnter the grade (percentage) earned for the following:");
+
+        System.out.printf("Quiz: ");
+        int quiz1 = scan.nextInt();
+        System.out.printf("Exam: ");
+        int exam1 = scan.nextInt();
+        System.out.printf("Homework: ");
+        int homework1 = scan.nextInt();
+        System.out.printf("Project: ");
+        int project1 = scan.nextInt();
+
+        //append inputted grades to gradeBook file
+        try {
+            FileWriter gradeBook = new FileWriter("gradebook.txt", true);
+            gradeBook.append("\nGrades - \nQuiz one: " + quiz1 + "\nExam one: " + exam1 + "\nHomework one: " + homework1 + "\nProject one: " + project1);
+            gradeBook.close();
+        } catch (IOException e) {
+            System.out.println("An error occurred.");
+            e.printStackTrace();
+        }
+
+        //pass to doMath method to calculate overall weighted grade
+        doMath(quiz1, exam1, homework1, project1);
+    }
+
+    /**
+     * Determines the final grade and letter grade
+     *
+     * @param quiz
+     * @param exam
+     * @param homework
+     * @param project
+     */
+    public static void doMath(int quiz, int exam, int homework, int project) {
+        //Weights:
+        int quizWeight = 20;
+        int examWeight = 30;
+        int homeworkWeight = 25;
+        int projectWeight = 25;
+        int totalWeight = quizWeight+examWeight+homeworkWeight+projectWeight;
+
+        //use grade input to calculate overall weighted grade
+        double finalGrade = ((quiz*quizWeight) + (exam*examWeight) + (homework*homeworkWeight) +
+                (project*projectWeight))/ (totalWeight);
+
+        //letter grade
+        String letterGrade;
+        if (finalGrade >= 90) {
+            System.out.println("\nCongratulations! You have an A!");
+            letterGrade = "A";
+        } else if (finalGrade >= 80){
+            letterGrade = "B";
+        } else if (finalGrade >= 70){
+            letterGrade = "C";
+        } else if (finalGrade >= 60){
+            letterGrade = "D";
+        } else {
+            letterGrade = "F";
+        }
+
+        //append overall grade to gradeBook file
+        try {
+            FileWriter gradeBook = new FileWriter("gradebook.txt", true);
+            gradeBook.write("\n\nOverall Grade: " + finalGrade);
+            gradeBook.write("\nLetter Grade: " + letterGrade + "\n\n");
+            if (letterGrade == "A") {
+                gradeBook.write("\nCongratulations! You have an A!");
+            }
+            gradeBook.close();
+        } catch (IOException e) {
+            System.out.println("An error occurred.");
+            e.printStackTrace();
+        }
+    }
+}
